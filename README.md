@@ -54,6 +54,7 @@ Ex:
 `City.show(my_city_id)`
 
 #### Authors
-Kevin Yook
-Christopher Choe
-Wendy Leung
+* Kevin Yook
+* Miranda Evans
+* Christopher Choe
+* Wendy Leung
