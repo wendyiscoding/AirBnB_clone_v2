@@ -24,7 +24,17 @@ class FileStorage:
         """returns a dictionary
         Return:
             returns a dictionary of __object
+            (optional) of one type of class
         """
+        if cls:
+            dict_class = {}
+            for k, v in self.__objects.items():
+                try:
+                    if type(v) == cls:
+                        dict_class[k] = v
+                except:
+                    pass
+            return dict_class
         return self.__objects
 
     def new(self, obj):
@@ -55,3 +65,13 @@ class FileStorage:
                     self.__objects[key] = value
         except FileNotFoundError:
             pass
+
+    def delete(self, obj=None):
+        """delete obj from __objects if it's inside
+        """
+        if obj is None:
+            return
+        k = str(obj.__class__.__name__) + "." + str(obj.id)
+        if k in self.__objects.keys():
+            del self.__objects[k]
+            self.save()
