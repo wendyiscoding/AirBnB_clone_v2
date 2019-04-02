@@ -16,8 +16,8 @@ class State(BaseModel, Base):
     name = Column(String(128), nullable=False)
     cities = relationship("City", cascade="all,delete", backref="state")
 
-    @getter
-    def cities:
+    @property
+    def cities(self):
         """getter for cities
         """
         all_cities = models.storage.all(City)

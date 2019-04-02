@@ -11,7 +11,7 @@ import os
 
 
 if 'HBNB_TYPE_STORAGE' in os.environ:
-    from db_storage import DBStorage
+    from models.engine.db_storage import DBStorage
     storage = DBStorage()
 else:
     from models.engine.file_storage import FileStorage
