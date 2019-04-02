@@ -6,6 +6,10 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import BaseModel, Base
 from models.city import City
 from models.state import State
+from models.user import User
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 import os
 
 
@@ -35,12 +39,12 @@ class DBStorage:
         """
         obj_dict = {}
         if cls is None:
-            classes = self.__session.query(User, State, City, Amenity, Place, Review).\
-                all();
+            classes = self.__session.query(State).all()
+            classes += self.__session.query(City).all()
         else:
             classes = self.__session.query(cls).all()
         for obj in classes:
-            key = obj.__name__ + '.' + obj.__id__
+            key = obj.__class__.__name__ + '.' + str(obj.id)
             obj_dict[key] = obj
         return obj_dict
 
@@ -59,11 +63,13 @@ class DBStorage:
         """
         if obj is not None:
             self.__session.delete(obj)
+            self.save()
 
     def reload(self):
         """ create all tables, and current database session
         """
         Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        session_factory = sessionmaker(
+                            bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
