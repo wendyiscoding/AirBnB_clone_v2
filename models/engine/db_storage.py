@@ -2,7 +2,7 @@
 """ Database storage engine
 """
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import BaseModel, Base
 from models.city import City
 from models.state import State
@@ -20,14 +20,14 @@ class DBStorage:
         """ initializes DBStorage class
         """
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.format(
-                                        os.environ['HBNB_MYSQL_USER'],
-                                        os.environ['HBNB_MYSQL_PWD'],
-                                        os.environ['HBNB_MYSQL_HOST'],
-                                        os.environ['HBNB_MYSQL_DB']),
+                                        os.getenv('HBNB_MYSQL_USER'),
+                                        os.getenv('HBNB_MYSQL_PWD'),
+                                        os.getenv('HBNB_MYSQL_HOST'),
+                                        os.getenv('HBNB_MYSQL_DB')),
                                       pool_pre_ping=True)
 
         if os.getenv('HBNB_ENV') == 'test':
-            Base.metadata.drop_all(engine)
+            Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """ query on current db session all objects depending on class name
@@ -64,6 +64,6 @@ class DBStorage:
         """ create all tables, and current database session
         """
         Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(bind=engine, expire_on_commit=False)
+        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
