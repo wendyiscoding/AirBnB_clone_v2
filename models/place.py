@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 """This is the place class"""
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy.orm import relationship
+from models.review import Review
 from models.city import City
 from models.base_model import BaseModel, Base
 
@@ -32,3 +34,15 @@ class Place(BaseModel, Base):
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
     amenity_ids = []
+    reviews = relationship("Review", cascade="all,delete", backref="place")
+
+    @property
+    def reviews(self):
+        """ filestorage reviews getter
+        """
+        all_reviews = models.storage.all(Review)
+        places = []
+        for k, v in all_reviews.items():
+            if v.__place_id__== self.id:
+                places.append(v)
+        return places
