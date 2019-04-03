@@ -44,6 +44,7 @@ class DBStorage:
             classes += self.__session.query(User).all()
             classes += self.__session.query(Place).all()
             classes += self.__session.query(Review).all()
+            classes += self.__session.query(Amenity).all()
         else:
             classes = self.__session.query(cls).all()
         for obj in classes:
