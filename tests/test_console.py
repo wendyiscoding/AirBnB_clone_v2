@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 """test for console"""
 import os
-if not os.getenv('HBNB_ENV'):
-    os.environ['HBNB_TYPE_STORAGE'] = 'notdb'
 import models
 import unittest
 from unittest.mock import patch
