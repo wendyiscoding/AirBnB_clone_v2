@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """test for console"""
+import models
 import unittest
 from unittest.mock import patch
 from io import StringIO
@@ -60,18 +61,21 @@ class TestConsole(unittest.TestCase):
         self.assertIsNotNone(HBNBCommand.strip_clean.__doc__)
         self.assertIsNotNone(HBNBCommand.default.__doc__)
 
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db', "not db")
     def test_emptyline(self):
         """Test empty line input"""
         with patch('sys.stdout', new=StringIO()) as f:
             self.consol.onecmd("\n")
             self.assertEqual('', f.getvalue())
 
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db', "not db")
     def test_quit(self):
         """test quit command inpout"""
         with patch('sys.stdout', new=StringIO()) as f:
             self.consol.onecmd("quit")
             self.assertEqual('', f.getvalue())
 
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db', "not db")
     def test_create(self):
         """Test create command inpout"""
         with patch('sys.stdout', new=StringIO()) as f:
@@ -89,6 +93,7 @@ class TestConsole(unittest.TestCase):
             self.assertEqual(
                 "[[User]", f.getvalue()[:7])
 
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db', "not db")
     def test_show(self):
         """Test show command inpout"""
         with patch('sys.stdout', new=StringIO()) as f:
@@ -108,6 +113,7 @@ class TestConsole(unittest.TestCase):
             self.assertEqual(
                 "** no instance found **\n", f.getvalue())
 
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db', "not db")
     def test_destroy(self):
         """Test destroy command inpout"""
         with patch('sys.stdout', new=StringIO()) as f:
@@ -127,6 +133,7 @@ class TestConsole(unittest.TestCase):
             self.assertEqual(
                 "** no instance found **\n", f.getvalue())
 
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db', "not db")
     def test_all(self):
         """Test all command inpout"""
         with patch('sys.stdout', new=StringIO()) as f:
@@ -136,6 +143,7 @@ class TestConsole(unittest.TestCase):
             self.consol.onecmd("all State")
             self.assertEqual("[]\n", f.getvalue())
 
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db', "not db")
     def test_update(self):
         """Test update command inpout"""
         with patch('sys.stdout', new=StringIO()) as f:
@@ -167,6 +175,7 @@ class TestConsole(unittest.TestCase):
             self.assertEqual(
                 "** value missing **\n", f.getvalue())
 
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db', "not db")
     def test_z_all(self):
         """Test alternate all command inpout"""
         with patch('sys.stdout', new=StringIO()) as f:
@@ -177,6 +186,7 @@ class TestConsole(unittest.TestCase):
             self.consol.onecmd("State.all()")
             self.assertEqual("[]\n", f.getvalue())
 
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db', "not db")
     def test_z_count(self):
         """Test count command inpout"""
         with patch('sys.stdout', new=StringIO()) as f:
@@ -187,6 +197,7 @@ class TestConsole(unittest.TestCase):
             self.consol.onecmd("State.count()")
             self.assertEqual("0\n", f.getvalue())
 
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db', "not db")
     def test_z_show(self):
         """Test alternate show command inpout"""
         with patch('sys.stdout', new=StringIO()) as f:
@@ -198,6 +209,7 @@ class TestConsole(unittest.TestCase):
             self.assertEqual(
                 "** no instance found **\n", f.getvalue())
 
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db', "not db")
     def test_destroy(self):
         """Test alternate destroy command inpout"""
         with patch('sys.stdout', new=StringIO()) as f:
@@ -209,6 +221,7 @@ class TestConsole(unittest.TestCase):
             self.assertEqual(
                 "** no instance found **\n", f.getvalue())
 
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db', "not db")
     def test_update(self):
         """Test alternate destroy command inpout"""
         with patch('sys.stdout', new=StringIO()) as f:
@@ -231,6 +244,61 @@ class TestConsole(unittest.TestCase):
             self.consol.onecmd("User.update(" + my_id + ", name)")
             self.assertEqual(
                 "** value missing **\n", f.getvalue())
+
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db', "not db")
+    def test_create_class_name_variable_good_input_string(self):
+        """Test if name variable with good input passed into class is string"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd('create City name="California"')
+        objid = 'City.' + f.getvalue()
+        objid = objid[:-1]
+        my_objects = models.storage.all()
+        self.assertEqual(
+            type(my_objects[objid].name), str)
+
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db', "not db")
+    def test_create_class_direction_variable_good_input__string(self):
+        """Test if direction variable passed into class is string"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd('create City direction="South"')
+        objid = 'City.' + f.getvalue()
+        objid = objid[:-1]
+        my_objects = models.storage.all()
+        self.assertEqual(
+            type((my_objects[objid]).direction), str)
+
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db', "not db")
+    def test_create_class_variable_empty_string(self):
+        """Test if empty variable passed into class is string"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd('create City crime=""')
+        objid = 'City.' + f.getvalue()
+        objid = objid[:-1]
+        my_objects = models.storage.all()
+        self.assertEqual(
+            type(my_objects[objid].crime), str)
+
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db', "not db")
+    def test_create_class_variable_escape_string(self):
+        """Test if variable with escaped quote passed into class is string"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd('create City direction="We\"st"')
+        my_objects = models.storage.all()
+        objid = 'City.' + f.getvalue()
+        objid = objid[:-1]
+        self.assertRaises(AttributeError,
+                          lambda: my_objects[objid].direction)
+
+    @unittest.skipIf(os.getenv("HBNB_TYPE_STORAGE") == 'db', "not db")
+    def test_create_class_variable_no_escape_quote_string(self):
+        """Test if variable with non-escaped quote pass into class is string"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd('create City direction="Eas"t"')
+        objid = 'City.' + f.getvalue()
+        objid = objid[:-1]
+        my_objects = models.storage.all()
+        self.assertRaises(AttributeError,
+                          lambda: my_objects[objid].direction)
 
 if __name__ == "__main__":
     unittest.main()
