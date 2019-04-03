@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """This is the place class"""
 import models
+import os
 from sqlalchemy import Table, Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship
 from models.review import Review
@@ -54,22 +55,23 @@ class Place(BaseModel, Base):
                 places.append(v)
         return places
 
-    amenities = relationship("Amenity", secondary=place_amenity, viewonly=False)
+    amenities = relationship("Amenity", secondary="place_amenity", viewonly=False)
 
-    @property
-    def amenities(self):
-        """ getter attribute for amenity based on file storage
-        """
-        all_amenities = models.storage.all(Amenity)
-        places = []
-        for k, v in all_amenities.items():
-            if v.id in self.amenity_ids:
-                places.append(v)
-        return places
+    if os.getenv('HBNB_TYPE_STORAGE') != 'db':
+        @property
+        def amenities(self):
+            """ getter attribute for amenity based on file storage
+            """
+            all_amenities = models.storage.all(Amenity)
+            places = []
+            for k, v in all_amenities.items():
+                if v.id in self.amenity_ids:
+                    places.append(v)
+            return places
 
-    @amenities.setter
-    def amenities(self, amn):
-        """ setter attribute for amenities based on file storage
-        """
-        if type(amn) is Amenity:
-            self.amenity_ids.append(str(amn.id))
+        @amenities.setter
+        def amenities(self, amn):
+            """ setter attribute for amenities based on file storage
+            """
+            if type(amn) is Amenity:
+                self.amenity_ids.append(str(amn.id))
