@@ -3,7 +3,6 @@
 """
 
 
-
 class DBStorage:
     """ Database storage class
     """
