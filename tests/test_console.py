@@ -1,11 +1,13 @@
 #!/usr/bin/python3
 """test for console"""
+import os
+if not os.getenv('HBNB_ENV'):
+    os.environ['HBNB_TYPE_STORAGE'] = 'notdb'
 import models
 import unittest
 from unittest.mock import patch
 from io import StringIO
 import pep8
-import os
 import json
 import console
 import tests
@@ -26,6 +28,8 @@ class TestConsole(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """setup for the test"""
+        if not os.getenv('HBNB_ENV'):
+            os.environ['HBNB_TYPE_STORAGE'] = 'notdb'
         cls.consol = HBNBCommand()
 
     @classmethod
