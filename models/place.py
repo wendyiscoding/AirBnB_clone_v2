@@ -1,11 +1,18 @@
 #!/usr/bin/python3
 """This is the place class"""
-from sqlalchemy import Column, Integer, String, Float, ForeignKey
+import models
+from sqlalchemy import Table, Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship
 from models.review import Review
 from models.city import City
+from models.amenity import Amenity
 from models.base_model import BaseModel, Base
 
+
+metadata = Base.metadata
+place_amenity = Table('place_amenity', metadata,
+    Column('place_id', String(60), ForeignKey('places.id'), primary_key=True, nullable=False),
+    Column('amenity_id', String(60), ForeignKey('amenities.id'), primary_key=True, nullable=False))
 
 class Place(BaseModel, Base):
     """This is the class for Place
@@ -17,7 +24,7 @@ class Place(BaseModel, Base):
         number_rooms: number of room in int
         number_bathrooms: number of bathrooms in int
         max_guest: maximum guest in int
-        price_by_night:: pice for a staying in int
+        price_by_night:: price for staying in int
         latitude: latitude in flaot
         longitude: longitude in float
         amenity_ids: list of Amenity ids
@@ -43,6 +50,26 @@ class Place(BaseModel, Base):
         all_reviews = models.storage.all(Review)
         places = []
         for k, v in all_reviews.items():
-            if v.__place_id__== self.id:
+            if v.__place_id__ == self.id:
                 places.append(v)
         return places
+
+    amenities = relationship("Amenity", secondary=place_amenity, viewonly=False)
+
+    @property
+    def amenities(self):
+        """ getter attribute for amenity based on file storage
+        """
+        all_amenities = models.storage.all(Amenity)
+        places = []
+        for k, v in all_amenities.items():
+            if v.id in self.amenity_ids:
+                places.append(v)
+        return places
+
+    @amenities.setter
+    def amenities(self, amn):
+        """ setter attribute for amenities based on file storage
+        """
+        if type(amn) is Amenity:
+            self.amenity_ids.append(str(amn.id))
