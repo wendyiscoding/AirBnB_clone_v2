@@ -9,5 +9,5 @@ sudo ln -sf /data/web_static/releases/test /data/web_static/current
 sudo chown -R ubuntu:ubuntu /data/
 new_string="location /hbnb_static {\n\t\talias /data/web_static/current/\n\t}"
 file=$"/etc/nginx/sites-available/default"
-sudo sed -i "37i $new_string" $file
+sudo sed -i "29i $new_string" $file
 sudo service nginx restart
