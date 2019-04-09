@@ -5,6 +5,7 @@ distributes an archive to your web servers, using do_deploy
 from datetime import datetime
 from fabric.api import *
 import os
+import re
 
 env.hosts = ['104.196.153.49', '35.231.85.9']
 env.user = 'ubuntu'
@@ -35,8 +36,8 @@ def do_deploy(archive_path):
     try:
         put(archive_path, "/tmp")
         """modify path as needed"""
-        no_v_or_ext = archive_path[9:-5]
-        no_v = archive_path[9:]
+        path_list = re.split('[/.]', archive_path)
+        no_v_or_ext = path_list[1]
         pathname = "/data/web_static/releases/{}/".format(no_v_or_ext)
         run('sudo mkdir -p {}'.format(pathname))
         run('sudo tar -xzf /tmp/{} -C {}'.format(no_v, pathname))
