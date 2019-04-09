@@ -22,7 +22,7 @@ def do_pack():
     zeit = datetime.now().strftime('%Y%m%d%H%M%S')
     try:
         local('tar -cvzf versions/web_static_{}.tgz web_static'.format(zeit))
-        return '/versions/web_static_{}.tgz'.format(zeit)
+        return 'versions/web_static_{}.tgz'.format(zeit)
     except:
         return None
 
