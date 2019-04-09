@@ -37,7 +37,7 @@ def do_deploy(archive_path):
     try:
         put(archive_path, "/tmp")
         """modify path as needed"""
-        no_v_or_ext = archive_path[9:-5]
+        no_v_or_ext = archive_path[9:-4]
         no_v = archive_path[9:]
         pathname = "/data/web_static/releases/{}/".format(no_v_or_ext)
         run('sudo mkdir -p {}'.format(pathname))
