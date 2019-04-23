@@ -47,7 +47,9 @@ class DBStorage:
             classes += self.__session.query(Amenity).all()
         else:
             if type(cls) == str:
-                my_cls_dict = {'State': State, 'City': City, 'User': User, 'Place': Place, 'Review': Review, 'Amenity': Amenity}
+                my_cls_dict = {'State': State, 'City': City,
+                               'User': User, 'Place': Place,
+                               'Review': Review, 'Amenity': Amenity}
                 cls = my_cls_dict[cls]
             classes = self.__session.query(cls).all()
             for obj in classes:
