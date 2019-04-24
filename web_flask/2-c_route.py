@@ -8,7 +8,7 @@ app.url_map.strict_slashes = False
 
 
 @app.route("/")
-def display_hello():
+def index():
     """
     display Hello HBNB!
     """
@@ -24,7 +24,7 @@ def display_hbnb():
 
 
 @app.route("/c/<text>")
-def display_c(text):
+def c(text):
     """
     display C followed by the value of text variable
     """

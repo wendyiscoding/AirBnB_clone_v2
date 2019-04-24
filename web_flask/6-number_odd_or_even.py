@@ -8,7 +8,7 @@ app.url_map.strict_slashes = False
 
 
 @app.route("/")
-def display_hello():
+def index():
     """
     display Hello HBNB!
     """
@@ -16,7 +16,7 @@ def display_hello():
 
 
 @app.route("/hbnb")
-def display_hbnb():
+def hbnb():
     """
     display HBNB
     """
@@ -24,7 +24,7 @@ def display_hbnb():
 
 
 @app.route("/c/<text>")
-def display_c(text):
+def c(text):
     """
     display C followed by the value of text variable
     """
@@ -33,7 +33,7 @@ def display_c(text):
 
 @app.route("/python")
 @app.route("/python/<text>")
-def display_python(text="is cool"):
+def python(text="is cool"):
     """
     display Python followed by the value of text variable with default is cool
     """
@@ -41,7 +41,7 @@ def display_python(text="is cool"):
 
 
 @app.route("/number/<int:n>")
-def display_number(n):
+def number(n):
     """
     display n is a number only if n is an integer
     """
@@ -49,7 +49,7 @@ def display_number(n):
 
 
 @app.route("/number_template/<int:n>")
-def display_number_template(n):
+def number_template(n):
     """
     display HTML page only if n is an integer
     """
@@ -57,7 +57,7 @@ def display_number_template(n):
 
 
 @app.route("/number_odd_or_even/<int:n>")
-def display_number_odd_or_even(n):
+def number_odd_or_even(n):
     """
     display HTML page only if n is an integer
     """
